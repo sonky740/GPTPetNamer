@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
+import styled from 'styled-components';
 import { getErrorMessage } from '@/utils/error';
 
 export default function Home() {
   const [count, setCount] = useState(0);
   const [animal, setAnimal] = useState('');
+  const [result, setResult] = useState('');
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnimal(e.target.value);
@@ -40,20 +42,80 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1>GPT_PET_NAMER</h1>
+      <Main>
+        <Heading1>GPT_PET_NAMER</Heading1>
         {count > 0 && <p>You&apos;ve used this app {count} times</p>}
-        <form onSubmit={onSubmit}>
-          <input
+        <Form onSubmit={onSubmit}>
+          <Input
             type="text"
             name="animal"
             placeholder="Enter an animal"
             value={animal}
             onChange={onChange}
           />
-          <button type="submit">Submit</button>
-        </form>
-      </main>
+          <SubmitBtn type="submit">Generate names</SubmitBtn>
+        </Form>
+        <Result>{result}</Result>
+      </Main>
     </>
   );
 }
+
+const Main = styled.main`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding-top: 10rem;
+  background: rgb(9, 121, 98);
+  background: linear-gradient(
+    151deg,
+    rgba(9, 121, 98, 1) 32%,
+    rgba(9, 121, 88, 1) 46%,
+    rgba(9, 121, 26, 1) 78%
+  );
+`;
+
+const Heading1 = styled.h1`
+  font-size: 3.2rem;
+  line-height: 4rem;
+  font-weight: bold;
+  color: #202123;
+  margin: 1.6rem 0 2rem;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 32rem;
+`;
+
+const Input = styled.input`
+  margin-top: 1rem;
+  padding: 1.2rem 1.6rem;
+  background: #fff;
+  border: 1px solid #10a37f;
+  border-radius: 0.4rem;
+  margin-bottom: 2.4rem;
+  outline-color: #10a37f;
+
+  &::placeholder {
+    color: #8e8ea0;
+    opacity: 1;
+  }
+`;
+
+const SubmitBtn = styled.button`
+  padding: 1.2rem 0;
+  color: #fff;
+  background-color: #10a37f;
+  border: none;
+  border-radius: 0.4rem;
+  text-align: center;
+  cursor: pointer;
+`;
+
+const Result = styled.div`
+  font-weight: bold;
+  margin-top: 4rem;
+`;
