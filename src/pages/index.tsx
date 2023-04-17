@@ -7,7 +7,8 @@ import { getErrorMessage } from '@/utils/error';
 export default function Home() {
   const [count, setCount] = useState(0);
   const [animal, setAnimal] = useState('');
-  const [result, setResult] = useState('');
+  const [question, setQuestion] = useState('');
+  const [result, setResult] = useState<string[]>([]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnimal(e.target.value);
@@ -21,12 +22,18 @@ export default function Home() {
         return console.log('You have reached the limit of 10 animals');
       }
 
-      const response = await axios.post('/api/generate', { animal });
+      const response = await axios.post('/api/petName', { animal });
 
       if (response.status !== 200) {
         throw response.data || new Error('Something went wrong');
       }
+
+      const lines = response.data.result.trim().split('\n');
+      const names = lines.map((line: string) => line.split('. ')[1]);
+
+      setResult(names);
       setCount(count + 1);
+      setQuestion(animal);
       setAnimal('');
     } catch (error) {
       console.error(error);
@@ -55,7 +62,14 @@ export default function Home() {
           />
           <SubmitBtn type="submit">Generate names</SubmitBtn>
         </Form>
-        <Result>{result}</Result>
+        <ResultWrap>
+          <Question>{question}</Question>
+          <Result>
+            {result.map((str, index) => {
+              return <li key={index}>{str}</li>;
+            })}
+          </Result>
+        </ResultWrap>
       </Main>
     </>
   );
@@ -115,7 +129,32 @@ const SubmitBtn = styled.button`
   cursor: pointer;
 `;
 
-const Result = styled.div`
+const ResultWrap = styled.article`
+  margin-top: 2rem;
+`;
+
+const Question = styled.h2`
+  margin-bottom: 1rem;
+  font-size: 2.4rem;
+  color: #202123;
+  text-align: center;
+`;
+
+const Result = styled.ul`
+  counter-reset: item;
   font-weight: bold;
-  margin-top: 4rem;
+
+  li {
+    position: relative;
+    font-size: 1.6rem;
+
+    + li {
+      margin-top: 0.8rem;
+    }
+
+    &:before {
+      content: counter(item) '. ';
+      counter-increment: item;
+    }
+  }
 `;
