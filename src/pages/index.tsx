@@ -3,12 +3,14 @@ import Head from 'next/head';
 import axios from 'axios';
 import styled from 'styled-components';
 import { getErrorMessage } from '@/utils/error';
+import AppLoading from '@/components/AppLoading';
 
 export default function Home() {
   const [count, setCount] = useState(0);
   const [animal, setAnimal] = useState('');
   const [question, setQuestion] = useState('');
   const [result, setResult] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnimal(e.target.value);
@@ -16,6 +18,7 @@ export default function Home() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       if (count === 10) {
@@ -35,6 +38,7 @@ export default function Home() {
       setCount(count + 1);
       setQuestion(animal);
       setAnimal('');
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
       alert(getErrorMessage(error));
@@ -43,12 +47,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Create Next App</title>
-        <meta name="description" content="GPT PET NAMER" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      {isLoading && <AppLoading />}
       <Main>
         <Heading1>GPT_PET_NAMER</Heading1>
         {count > 0 && <p>You&apos;ve used this app {count} times</p>}
