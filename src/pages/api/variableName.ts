@@ -21,11 +21,11 @@ export default async function API(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const animal = req.body.animal || '';
-  if (animal.trim().length === 0) {
+  const variables = req.body.variables || '';
+  if (variables.trim().length === 0) {
     res.status(500).json({
       error: {
-        message: 'Animal name is required',
+        message: 'Variables name is required',
       },
     });
   }
@@ -33,7 +33,7 @@ export default async function API(req: NextApiRequest, res: NextApiResponse) {
   try {
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
-      prompt: `suggest three pet names for the follow ${animal}`,
+      prompt: `Suggest three variable names for the following "${variables}."`,
       temperature: 0.8,
       max_tokens: 100,
     });

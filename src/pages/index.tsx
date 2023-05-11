@@ -1,19 +1,18 @@
 import { useState } from 'react';
-import Head from 'next/head';
 import axios from 'axios';
 import styled from 'styled-components';
 import { getErrorMessage } from '@/utils/error';
 import AppLoading from '@/components/AppLoading';
 
-export default function Home() {
+export default function VariableName() {
   const [count, setCount] = useState(0);
-  const [animal, setAnimal] = useState('');
+  const [variables, setVariables] = useState('');
   const [question, setQuestion] = useState('');
   const [result, setResult] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAnimal(e.target.value);
+    setVariables(e.target.value);
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,10 +21,10 @@ export default function Home() {
 
     try {
       if (count === 10) {
-        return console.log('You have reached the limit of 10 animals');
+        return console.log('입력 한도 10개에 도달했습니다.');
       }
 
-      const response = await axios.post('/api/petName', { animal });
+      const response = await axios.post('/api/variableName', { variables });
 
       if (response.status !== 200) {
         throw response.data || new Error('Something went wrong');
@@ -36,8 +35,8 @@ export default function Home() {
 
       setResult(names);
       setCount(count + 1);
-      setQuestion(animal);
-      setAnimal('');
+      setQuestion(variables);
+      setVariables('');
       setIsLoading(false);
     } catch (error) {
       console.error(error);
@@ -49,17 +48,17 @@ export default function Home() {
     <>
       {isLoading && <AppLoading />}
       <Main>
-        <Heading1>GPT_PET_NAMER</Heading1>
-        {count > 0 && <p>You&apos;ve used this app {count} times</p>}
+        <Heading1>GPT4: 변수명 추천</Heading1>
+        {count > 0 && <p>이 앱을 {count}번 사용하였습니다.</p>}
         <Form onSubmit={onSubmit}>
           <Input
             type="text"
-            name="animal"
-            placeholder="Enter an animal"
-            value={animal}
+            name="variables"
+            placeholder="원하는 변수명을 간단히 설명해 주세요."
+            value={variables}
             onChange={onChange}
           />
-          <SubmitBtn type="submit">Generate names</SubmitBtn>
+          <SubmitBtn type="submit">변수명 생성</SubmitBtn>
         </Form>
         <ResultWrap>
           <Question>{question}</Question>
