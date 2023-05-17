@@ -48,7 +48,7 @@ export default function VariableName() {
     <>
       {isLoading && <AppLoading />}
       <Main>
-        <Heading1>GPT4: 변수명 추천</Heading1>
+        <Heading1>GPT3.5: 변수명 추천</Heading1>
         {count > 0 && <p>이 앱을 {count}번 사용하였습니다.</p>}
         <Form onSubmit={onSubmit}>
           <Input
